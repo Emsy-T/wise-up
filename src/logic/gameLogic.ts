@@ -56,3 +56,23 @@ export function nextLevel(state: PlayerState): PlayerState {
     decisionIndex: 0,
   };
 }
+
+// SAVE GAME STATE TO BROWSER LOCAL STORAGE
+export function saveGame(state: PlayerState): void {
+  localStorage.setItem('wiseup-game-state', JSON.stringify(state));
+}
+
+// LOAD GAME FROM BROWSER STORAGE TO RESTORE PLAYER PROGRESS
+export function loadGame(): PlayerState {
+  const saved = localStorage.getItem('wiseup-game-state');
+  if (saved) {
+    return JSON.parse(saved);
+  }
+
+  return {
+    money: 50000,
+    savings: 0,
+    currentLevel: 1,
+    decisionIndex: 0,
+  };
+}

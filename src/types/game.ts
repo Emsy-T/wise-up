@@ -4,7 +4,7 @@ export type PlayerState = {
   savings: number;
   currentLevel: number;
   decisionIndex: number;
-  budget: {
+  budget?: {
     food?: number;
     transport?: number;
     social?: number;
