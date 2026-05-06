@@ -3,25 +3,37 @@ export type PlayerState = {
   money: number;
   savings: number;
   currentLevel: number;
-  decisionId: number;
+  decisionIndex: number;
+  budget: {
+    food?: number;
+    transport?: number;
+    social?: number;
+    airtime_data?: number;
+  };
 };
 
 // DEFINE EFFECT, WHICH AFFECTS THE MONEY THE PLAYER HAS
 export type Effect = {
   money?: number; // money added or lost
   savings?: number; //money moved to Savings
+  budget?: {
+    food?: number;
+    transport?: number;
+    social?: number;
+    airtime_data?: number;
+  };
 };
 
 // DEFINE CHOICE, WHICH IS THE OPTIONS AVAILABLE FOR A DECISION
 export type Choice = {
-  id: number;
+  id: string;
   text: string;
   effect: Effect;
 };
 
 // DEFINE DECISION, WHICH ALLOWS THE PLAYER TO MAKE A CHOICE THAT WILL HELP THEM COMPLETE THE CHALLENGE
 export type Decision = {
-  id: number;
+  id: string;
   prompt: string;
   choices: Choice[];
 };
