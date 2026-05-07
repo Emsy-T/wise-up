@@ -1,4 +1,4 @@
-import type { PlayerState, Choice } from '../types/game';
+import type { PlayerState, Choice } from '../types/gameTypes';
 
 // CREATE A FUNCTION TO APPLY THE EFFECT OF THE PLAYER'S CHOICE ON THEIR STATE
 export function applyEffect(state: PlayerState, choice: Choice): PlayerState {
@@ -35,7 +35,7 @@ AND
 */
 
 // To plan for scalability, instead of directly checking that the player is on Level 10, use a constant that holds the total number of levels and compare the player's current level with the total levels
-export function isGameWon(state: PlayerState, totalLevels = 10): boolean {
+export function isGameWon(state: PlayerState, totalLevels): boolean {
   const totalWealth = state.money + state.savings;
   return state.currentLevel >= totalLevels && totalWealth >= 10000;
 }

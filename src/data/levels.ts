@@ -1,4 +1,4 @@
-import type { Level } from '../types/game';
+import type { Level } from '../types/gameTypes';
 
 export const levels: Level[] = [
   // LEVEL 1 - Create a budget
