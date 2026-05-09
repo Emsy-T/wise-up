@@ -34,10 +34,23 @@ AND
 - Savings + Money is equal to or more than #10,000
 */
 
-// To plan for scalability, instead of directly checking that the player is on Level 10, use a constant that holds the total number of levels and compare the player's current level with the total levels
+// NOTE: To plan for scalability, instead of directly checking that the player is on Level 10, use a constant that holds the total number of levels and compare the player's current level with the total levels
+
+// Create functions that determine whether the player wins or survives the game.
 export function isGameWon(state: PlayerState, totalLevels): boolean {
-  const totalWealth = state.money + state.savings;
+  const totalWealth = state.money;
   return state.currentLevel >= totalLevels && totalWealth >= 10000;
+}
+
+export function isGameSurvived(state: PlayerState, totalLevels): boolean {
+  const totalWealth = state.money;
+  const totalSavings = state.savings;
+  return (
+    state.currentLevel >= totalLevels &&
+    0 < totalWealth &&
+    totalWealth <= 10000 &&
+    totalSavings != 0
+  );
 }
 
 // CREATE A FUNCTION THAT MOVES THE PLAYER TO THE NEXT DECISION WITHIN A LEVEL

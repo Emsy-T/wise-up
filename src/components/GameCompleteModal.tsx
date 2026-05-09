@@ -1,14 +1,18 @@
 import React from 'react';
+import { isGameWon, isGameSurvived } from '../logic/gameLogic';
 
-interface GameOverProps {
-  onRestart: () => void;
+interface GameCompleteModalProps {
+  onReplay: () => void;
 }
 
-const GameOverModal: React.FC<GameOverProps> = ({ onRestart }) => {
+const GameCompleteModal: React.FC<GameCompleteModalProps> = ({
+  playerState,
+  onReplay,
+}) => {
   // Create a function to restart the game and clear the browser storage so that users can have a clean slate for a new game
-  const handleRestart = () => {
+  const handleReplay = () => {
     localStorage.clear();
-    onRestart();
+    onReplay();
   };
   return (
     <div className='fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50'>
@@ -30,10 +34,10 @@ const GameOverModal: React.FC<GameOverProps> = ({ onRestart }) => {
 
         {/* Restart Game Button */}
         <button
-          onClick={handleRestart}
+          onClick={handleReplay}
           className='w-full mt-6 py-3 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition'
         >
-          Restart Game
+          Replay
         </button>
       </div>
     </div>
