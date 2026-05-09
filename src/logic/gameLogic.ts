@@ -1,5 +1,8 @@
 import type { PlayerState, Choice } from '../types/gameTypes';
 
+type totalLevels = number;
+const totalLevels = 10;
+
 // CREATE A FUNCTION TO APPLY THE EFFECT OF THE PLAYER'S CHOICE ON THEIR STATE
 export function applyEffect(state: PlayerState, choice: Choice): PlayerState {
   const effect = choice.effect;
@@ -37,20 +40,14 @@ AND
 // NOTE: To plan for scalability, instead of directly checking that the player is on Level 10, use a constant that holds the total number of levels and compare the player's current level with the total levels
 
 // Create functions that determine whether the player wins or survives the game.
-export function isGameWon(state: PlayerState, totalLevels): boolean {
-  const totalWealth = state.money;
-  return state.currentLevel >= totalLevels && totalWealth >= 10000;
-}
+export function evaluateGame(state: PlayerState): 'win' | 'survived' {
+  const totalMoney = state.money;
 
-export function isGameSurvived(state: PlayerState, totalLevels): boolean {
-  const totalWealth = state.money;
-  const totalSavings = state.savings;
-  return (
-    state.currentLevel >= totalLevels &&
-    0 < totalWealth &&
-    totalWealth <= 10000 &&
-    totalSavings != 0
-  );
+  if (state.currentLevel >= totalLevels && totalMoney >= 10000) return 'win';
+  if (state.currentLevel >= totalLevels && totalMoney > 0 && totalMoney < 10000)
+    return 'survived';
+
+  return 'win';
 }
 
 // CREATE A FUNCTION THAT MOVES THE PLAYER TO THE NEXT DECISION WITHIN A LEVEL
