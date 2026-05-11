@@ -8,7 +8,7 @@ export type PlayerState = {
     food?: number;
     transport?: number;
     social?: number;
-    airtime_data?: number;
+    toiletries?: number;
   };
 };
 
@@ -20,7 +20,7 @@ export type Effect = {
     food?: number;
     transport?: number;
     social?: number;
-    airtime_data?: number;
+    toiletries?: number;
   };
 };
 

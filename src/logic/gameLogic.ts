@@ -29,14 +29,6 @@ export function isGameOver(state: PlayerState): boolean {
   return state.money <= 0;
 }
 
-// CREATE A FUNCTION THAT CHECKS WHETHER THE PLAYER HAS WON
-/*
-isGameWon is true if:
-- Player's currentLevel == 10
-AND
-- Savings + Money is equal to or more than #10,000
-*/
-
 // NOTE: To plan for scalability, instead of directly checking that the player is on Level 10, use a constant that holds the total number of levels and compare the player's current level with the total levels
 
 // Create functions that determine whether the player wins or survives the game.
@@ -60,11 +52,30 @@ export function nextDecision(state: PlayerState): PlayerState {
 
 // CREATE A FUNCTION THAT MOVES THE PLAYER TO THE NEXT LEVEL
 export function nextLevel(state: PlayerState): PlayerState {
+  const nextLevel = state.currentLevel + 1;
+
+  // Pay salary every 5 levels
+  const updatedState = paySalary(nextLevel, state);
+
   return {
-    ...state,
-    currentLevel: state.currentLevel + 1,
+    ...updatedState,
+    currentLevel: nextLevel,
     decisionIndex: 0,
   };
+}
+
+// CREATE A FUNCTION THAT PAYS THE PLAYER THEIR SALARY EVERY FIVE LEVELS
+export function paySalary(
+  currentLevel: number,
+  state: PlayerState,
+): PlayerState {
+  const salary = 300000;
+
+  if (currentLevel % 5 === 1) {
+    return { ...state, money: state.money + salary };
+  }
+
+  return state;
 }
 
 // SAVE GAME STATE TO BROWSER LOCAL STORAGE
@@ -80,9 +91,10 @@ export function loadGame(): PlayerState {
   }
 
   return {
-    money: 50000,
+    money: 100000,
     savings: 0,
     currentLevel: 1,
     decisionIndex: 0,
+    budget: {},
   };
 }
