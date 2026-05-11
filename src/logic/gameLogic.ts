@@ -1,4 +1,7 @@
-import type { PlayerState, Choice } from '../types/gameTypes';
+// gameLogic.ts
+
+import type { PlayerState, Choice, Level } from '../types/gameTypes';
+import { levels } from '../data/levels';
 
 type totalLevels = number;
 const totalLevels = 10;
@@ -23,6 +26,66 @@ export function applyEffect(state: PlayerState, choice: Choice): PlayerState {
   };
 }
 
+// GET CURRENT LEVEL & DECISION
+export function getLevel(levelId: number): Level | undefined {
+  return levels.find((l) => l.id === levelId);
+}
+
+export function getDecision(levelId: number, decisionId: string) {
+  const level = getLevel(levelId);
+  return level?.decisions.find((d) => d.id === decisionId);
+}
+
+// HANDLE LINKED PLAYER CHOICES & DECISIONS
+export function makeChoice(
+  state: PlayerState,
+  levelId: number,
+  decisionId: string,
+  choiceId: string,
+): PlayerState {
+  const decision = getDecision(levelId, decisionId);
+  if (!decision) return state;
+
+  const choice = decision.choices.find((c) => c.id === choiceId);
+  if (!choice) return state;
+
+  // Apply effect
+  const newState = applyEffect(state, choice);
+
+  // If choice links to another decision, jump there
+  if (choice.nextDecisionId) {
+    return {
+      ...newState,
+      currentDecisionId: choice.nextDecisionId,
+    };
+  }
+
+  // Otherwise, move to next decision in sequence
+  return nextDecision(newState);
+}
+
+// DECISION NAVIGATION
+export function nextDecision(state: PlayerState): PlayerState {
+  return {
+    ...state,
+    decisionIndex: state.decisionIndex + 1,
+    currentDecisionId: undefined, // reset if moving sequentially
+  };
+}
+
+// LEVEL NAVIGATION
+export function nextLevel(state: PlayerState): PlayerState {
+  const nextLevel = state.currentLevel + 1;
+  const updatedState = paySalary(nextLevel, state);
+
+  return {
+    ...updatedState,
+    currentLevel: nextLevel,
+    decisionIndex: 0,
+    currentDecisionId: undefined, // reset decision flow
+  };
+}
+
 // CREATE A FUNCTION THAT CHECKS WHETHER THE GAME IS OVER
 // isGameOver is true if money is less than or equal to 0
 export function isGameOver(state: PlayerState): boolean {
@@ -40,28 +103,6 @@ export function evaluateGame(state: PlayerState): 'win' | 'survived' {
     return 'survived';
 
   return 'win';
-}
-
-// CREATE A FUNCTION THAT MOVES THE PLAYER TO THE NEXT DECISION WITHIN A LEVEL
-export function nextDecision(state: PlayerState): PlayerState {
-  return {
-    ...state,
-    decisionIndex: state.decisionIndex + 1,
-  };
-}
-
-// CREATE A FUNCTION THAT MOVES THE PLAYER TO THE NEXT LEVEL
-export function nextLevel(state: PlayerState): PlayerState {
-  const nextLevel = state.currentLevel + 1;
-
-  // Pay salary every 5 levels
-  const updatedState = paySalary(nextLevel, state);
-
-  return {
-    ...updatedState,
-    currentLevel: nextLevel,
-    decisionIndex: 0,
-  };
 }
 
 // CREATE A FUNCTION THAT PAYS THE PLAYER THEIR SALARY EVERY FIVE LEVELS
@@ -95,6 +136,7 @@ export function loadGame(): PlayerState {
     savings: 0,
     currentLevel: 1,
     decisionIndex: 0,
+    currentDecisionId: undefined,
     budget: {},
   };
 }

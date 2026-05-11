@@ -1,3 +1,5 @@
+// levels.ts
+
 import type { Level } from '../types/gameTypes';
 
 export const levels: Level[] = [
@@ -159,17 +161,17 @@ export const levels: Level[] = [
           {
             id: 'basic-toiletries',
             text: 'Soap + toothpaste + tissue + deodorant (₦5,000)',
-            effect: { money: -2000 },
+            effect: { money: -5000 },
           },
           {
             id: 'standard-toiletries',
             text: 'Soap + toothpaste + tissue + deodorant + body cream (₦7,000)',
-            effect: { money: -5000 },
+            effect: { money: -7000 },
           },
           {
             id: 'premium-toiletries',
             text: 'Basic toiletries + skincare + perfume (₦25,000)',
-            effect: { money: -10000 },
+            effect: { money: -25000 },
           },
         ],
       },
@@ -280,16 +282,19 @@ export const levels: Level[] = [
             id: 'home-hangout',
             text: 'Invite them to your place',
             effect: {},
+            nextDecisionId: 'home-hangout-options',
           },
           {
             id: 'park-visit',
             text: 'Spend the day at a park',
             effect: {},
+            nextDecisionId: 'park-visit-options',
           },
           {
             id: 'event',
             text: 'Attend an event',
             effect: {},
+            nextDecisionId: 'event-options',
           },
         ],
       },
@@ -369,11 +374,13 @@ export const levels: Level[] = [
             id: 'go-out',
             text: 'Spend time outside my house',
             effect: {},
+            nextDecisionId: 'go-out-options',
           },
           {
             id: 'stay-home',
             text: 'Stay at home',
             effect: {},
+            nextDecisionId: 'stay-home-options',
           },
         ],
       },
@@ -436,11 +443,13 @@ export const levels: Level[] = [
             id: 'maintain-budget',
             text: 'I will maintain my budget from last month',
             effect: {},
+            nextDecisionId: 'phone-repair',
           },
           {
             id: 'increase-budget',
             text: 'I will increase my budget',
             effect: {},
+            nextDecisionId: 'increase-food-budget',
           },
         ],
       },
@@ -455,11 +464,13 @@ export const levels: Level[] = [
             id: 'food-extra',
             text: 'Add ₦20,000 for more variety (meat, fruits, snacks)',
             effect: { budget: { food: +20000 }, money: -20000 },
+            nextDecisionId: 'increase-transport-budget', // chain continues
           },
           {
             id: 'no-food-extra',
             text: 'No change',
             effect: {},
+            nextDecisionId: 'increase-transport-budget',
           },
         ],
       },
@@ -473,11 +484,13 @@ export const levels: Level[] = [
             id: 'transport-extra',
             text: 'Add ₦20,000 for more taxi/ride-hailing trips',
             effect: { budget: { transport: +20000 }, money: -20000 },
+            nextDecisionId: 'increase-social-budget',
           },
           {
             id: 'no-transport-extra',
             text: 'No change',
             effect: {},
+            nextDecisionId: 'increase-social-budget',
           },
         ],
       },
@@ -491,11 +504,13 @@ export const levels: Level[] = [
             id: 'social-extra',
             text: 'Add ₦30,000 for more outings and events',
             effect: { budget: { social: +30000 }, money: -30000 },
+            nextDecisionId: 'increase-toiletries-budget',
           },
           {
             id: 'no-social-extra',
             text: 'No change',
             effect: {},
+            nextDecisionId: 'increase-toiletries-budget',
           },
         ],
       },
@@ -509,11 +524,13 @@ export const levels: Level[] = [
             id: 'toiletries-extra',
             text: 'Add ₦5,000 for premium toiletries and skincare',
             effect: { budget: { toiletries: +5000 }, money: -5000 },
+            nextDecisionId: 'phone-repair', // after finishing upgrades, go to phone repair
           },
           {
             id: 'no-toiletries-extra',
             text: 'No change',
             effect: {},
+            nextDecisionId: 'phone-repair',
           },
         ],
       },

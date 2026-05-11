@@ -1,9 +1,12 @@
+// gameTypes.ts
+
 // DEFINE PLAYER'S STATE. INCLUDE MONEY AVAILABLE, SAVINGS, CURRENT LEVEL, AND THE DECISION THEY ARE ON IN THE LEVEL
 export type PlayerState = {
   money: number;
   savings: number;
   currentLevel: number;
   decisionIndex: number;
+  currentDecisionId?: string;
   budget?: {
     food?: number;
     transport?: number;
@@ -28,6 +31,7 @@ export type Effect = {
 export type Choice = {
   id: string;
   text: string;
+  nextDecisionId?: string;
   effect: Effect;
 };
 
