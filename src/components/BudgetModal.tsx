@@ -53,11 +53,11 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ budget, onClose }) => {
             </span>
           </div>
 
-          {/* Airtime/Data */}
+          {/* Tolietries */}
           <div className='flex justify-between items-center'>
-            <span className='text-gray-700'>Airtime/Data</span>
+            <span className='text-gray-700'>Toiletries</span>
             <span className='font-semibold text-gray-900'>
-              ₦ {budget?.airtime_data?.toLocaleString() ?? '?'}
+              ₦ {budget?.toiletries?.toLocaleString() ?? '?'}
             </span>
           </div>
         </div>

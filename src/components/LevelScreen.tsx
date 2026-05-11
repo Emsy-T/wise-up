@@ -10,7 +10,6 @@ import LevelHeader from './LevelHeader';
 import DecisionBox from './DecisionBox';
 import FeedbackPanel from './FeedbackPanel';
 import { applyEffect } from '../logic/gameLogic';
-import { levels } from '../data/levels';
 
 interface LevelScreenProps {
   level: Level;
@@ -29,22 +28,25 @@ const LevelScreen: React.FC<LevelScreenProps> = ({
 
   const currentDecision = level.decisions[decisionIndex];
 
-  const confirmChoice = (currentState, choice: Choice) => {
-    /* Define the new player state to be the player state after the effect of the player's decisions has been applied */
+  const confirmChoice = (choice: Choice) => {
+    // Apply effect of choice
     const newState = applyEffect(currentState, choice);
 
+    // Update local state immediately
+    setCurrentState(newState);
+
+    // Build result object
     const result: LevelResult = {
       moneyChange: choice.effect.money ?? 0,
       savingsChange: choice.effect.savings ?? 0,
-      success: true, // Placeholder: evaluate based on challenge rules
+      success: true, // TODO: add challenge-specific success logic
     };
 
-    // Allow the app to move to the next decision if there is more than one decision in a level
+    // If more decisions remain, move to next
     if (decisionIndex < level.decisions.length - 1) {
       setDecisionIndex(decisionIndex + 1);
     } else {
-      /* Make sure the player's state only updates after all the decisions for the level have been made*/
-      setCurrentState(newState);
+      // End of level: show feedback and notify parent
       setShowFeedback(true);
       onComplete(result);
     }
@@ -54,7 +56,10 @@ const LevelScreen: React.FC<LevelScreenProps> = ({
     <div className='relative h-screen w-full bg-gray-100 flex flex-col'>
       {/* Top Left: Player Stats */}
       <div className='absolute top-4 left-4'>
-        <PlayerStats money={playerState.money} savings={playerState.savings} />
+        <PlayerStats
+          money={currentState.money}
+          savings={currentState.savings}
+        />
       </div>
 
       {/* Top Center: Level Header */}
@@ -82,9 +87,8 @@ const LevelScreen: React.FC<LevelScreenProps> = ({
         <FeedbackPanel
           result={{
             moneyChange: currentState.money - playerState.money,
-            savingsChange: currentState.savings - currentState.savings,
+            savingsChange: currentState.savings - playerState.savings,
             success: true,
-            /* TODO: Establish conditions for level success */
           }}
           playerState={currentState}
           onHome={() => console.log('Go back to Game Map')}
