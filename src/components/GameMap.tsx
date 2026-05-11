@@ -10,6 +10,7 @@ interface GameMapProps {
   state: PlayerState; // Current player state (money, savings, level, etc.)
   levels: Level[]; // Array of levels with metadata
   onEnterLevel: (level: Level) => void; // Callback when player starts a level
+  onUpdateState: React.Dispatch<React.SetStateAction<PlayerState | null>>;
 }
 
 const GameMap: React.FC<GameMapProps> = ({ state, levels, onEnterLevel }) => {
