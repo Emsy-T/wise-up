@@ -1,40 +1,51 @@
+// DecisionBox.tsx
+
 import React, { useState } from 'react';
 import type { Decision, Choice } from '../types/gameTypes';
 import ChoiceButton from './ChoiceButton';
 
 interface DecisionBoxProps {
-  decision: Decision; // Current decision prompt + choices
-  onConfirm: (choice: Choice) => void; // Callback when confirm button pressed
+  decision: Decision;
+  onConfirm: (choice: Choice) => void;
 }
 
 const DecisionBox: React.FC<DecisionBoxProps> = ({ decision, onConfirm }) => {
   const [selectedChoice, setSelectedChoice] = useState<Choice | null>(null);
 
   return (
-    <div className='bg-white rounded-lg shadow-lg w-[600px] p-6 flex flex-col space-y-6'>
+    <div className='w-full rounded-t-[2rem] border-t border-white/10 bg-[#102030]/95 backdrop-blur-xl shadow-2xl px-8 py-6'>
       {/* Prompt */}
-      <p className='text-gray-700 font-medium'>{decision.prompt}</p>
-
-      {/* Choice Buttons */}
-      <div className='flex space-x-4'>
-        {decision.choices.map((choice) => (
-          <ChoiceButton
-            key={choice.id}
-            choice={choice}
-            isSelected={selectedChoice?.id === choice.id}
-            onSelect={setSelectedChoice}
-          />
-        ))}
+      <div className='mb-6'>
+        <p className='text-white text-xl font-semibold leading-relaxed'>
+          {decision.prompt}
+        </p>
       </div>
 
-      {/* Confirm Button */}
-      <button
-        onClick={() => selectedChoice && onConfirm(selectedChoice)}
-        disabled={!selectedChoice}
-        className='self-center w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center shadow-md hover:bg-green-600 transition disabled:opacity-50'
-      >
-        ✓
-      </button>
+      {/* Choices + Confirm */}
+      <div className='flex gap-6 items-stretch'>
+        {/* LEFT SIDE — CHOICES */}
+        <div className='flex-1 flex flex-col gap-4'>
+          {decision.choices.map((choice) => (
+            <ChoiceButton
+              key={choice.id}
+              choice={choice}
+              isSelected={selectedChoice?.id === choice.id}
+              onSelect={setSelectedChoice}
+            />
+          ))}
+        </div>
+
+        {/* RIGHT SIDE — CONFIRM BUTTON */}
+        <div className='flex items-end'>
+          <button
+            onClick={() => selectedChoice && onConfirm(selectedChoice)}
+            disabled={!selectedChoice}
+            className='w-20 h-20 rounded-2xl bg-green-500 hover:bg-green-600 disabled:bg-gray-500 disabled:opacity-50 text-white text-4xl font-bold transition shadow-lg'
+          >
+            ✓
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

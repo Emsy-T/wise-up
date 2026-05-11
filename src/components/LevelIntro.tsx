@@ -1,3 +1,5 @@
+// LevelIntro.tsx
+
 import React from 'react';
 import type { Level } from '../types/gameTypes';
 

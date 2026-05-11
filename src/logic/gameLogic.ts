@@ -2,8 +2,6 @@
 
 import type { PlayerState, Choice, Level } from '../types/gameTypes';
 import { levels } from '../data/levels';
-
-type totalLevels = number;
 const totalLevels = 10;
 
 // CREATE A FUNCTION TO APPLY THE EFFECT OF THE PLAYER'S CHOICE ON THEIR STATE
@@ -95,14 +93,24 @@ export function isGameOver(state: PlayerState): boolean {
 // NOTE: To plan for scalability, instead of directly checking that the player is on Level 10, use a constant that holds the total number of levels and compare the player's current level with the total levels
 
 // Create functions that determine whether the player wins or survives the game.
-export function evaluateGame(state: PlayerState): 'win' | 'survived' {
+export function evaluateGame(
+  state: PlayerState,
+): 'win' | 'survived' | 'ongoing' {
   const totalMoney = state.money;
 
-  if (state.currentLevel >= totalLevels && totalMoney >= 10000) return 'win';
-  if (state.currentLevel >= totalLevels && totalMoney > 0 && totalMoney < 10000)
-    return 'survived';
+  if (state.currentLevel >= totalLevels && totalMoney >= 10000) {
+    return 'win';
+  }
 
-  return 'win';
+  if (
+    state.currentLevel >= totalLevels &&
+    totalMoney > 0 &&
+    totalMoney < 10000
+  ) {
+    return 'survived';
+  }
+
+  return 'ongoing';
 }
 
 // CREATE A FUNCTION THAT PAYS THE PLAYER THEIR SALARY EVERY FIVE LEVELS

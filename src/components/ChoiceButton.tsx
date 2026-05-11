@@ -1,10 +1,12 @@
+// ChoiceButton.tsx
+
 import React from 'react';
 import type { Choice } from '../types/gameTypes';
 
 interface ChoiceButtonProps {
-  choice: Choice; // Choice data (id, text, effect)
-  isSelected: boolean; // Whether this choice is currently selected
-  onSelect: (choice: Choice) => void; // Callback when clicked
+  choice: Choice;
+  isSelected: boolean;
+  onSelect: (choice: Choice) => void;
 }
 
 const ChoiceButton: React.FC<ChoiceButtonProps> = ({
@@ -15,14 +17,17 @@ const ChoiceButton: React.FC<ChoiceButtonProps> = ({
   return (
     <button
       onClick={() => onSelect(choice)}
-      className={`flex-1 py-3 rounded-lg shadow-md transition 
+      className={`
+        w-full p-5 rounded-2xl border text-left transition-all duration-200
+
         ${
           isSelected
-            ? 'bg-orange-500 text-white'
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}
+            ? 'bg-orange-500 border-orange-300 text-white shadow-xl scale-[1.01]'
+            : 'bg-white/10 border-white/10 text-white hover:bg-white/20'
+        }
+      `}
     >
-      {choice.text}
+      <p className='leading-relaxed font-medium'>{choice.text}</p>
     </button>
   );
 };

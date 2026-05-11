@@ -1,3 +1,5 @@
+// BudgetModal.tsx
+
 import React from 'react';
 import type { PlayerState } from '../types/gameTypes';
 
