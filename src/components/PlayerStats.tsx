@@ -9,19 +9,21 @@ interface PlayerStatsProps {
 
 const PlayerStats: React.FC<PlayerStatsProps> = ({ money, savings }) => {
   return (
-    <div className='bg-white rounded-lg shadow-md p-4 flex flex-col space-y-2'>
+    <div className='bg-white backdrop-blur-md border border-white/10 rounded-3xl px-5 py-4 flex items-center gap-6 shadow-xl'>
       {/* Display Money */}
-      <div className='flex justify-between items-center'>
-        <span className='font-semibold text-gray-700'>Money</span>
-        <span className='text-orange-500 font-bold'>
+      <div className='flex flex-col'>
+        <span className='text-s text-gray-400'>Money</span>
+        <span className='text-lg font-bold text-black'>
           ₦ {money.toLocaleString()}
         </span>
       </div>
 
+      <div className='w-px h-10 bg-white/10' />
+
       {/* Display Savings */}
-      <div className='flex justify-between items-center'>
-        <span className='font-semibold text-gray-700'>Savings</span>
-        <span className='text-green-600 font-bold'>
+      <div className='flex flex-col'>
+        <span className='text-s text-gray-400'>Savings</span>
+        <span className='text-lg font-bold text-black'>
           ₦ {savings.toLocaleString()}
         </span>
       </div>

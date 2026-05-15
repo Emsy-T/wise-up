@@ -2,7 +2,15 @@
 
 import React, { useState } from 'react';
 
-import type { Level, Choice, PlayerState, Decision } from '../types/gameTypes';
+import { HelpCircle, ReceiptText } from 'lucide-react';
+
+import type {
+  Level,
+  Choice,
+  PlayerState,
+  LevelResult,
+  Decision,
+} from '../types/gameTypes';
 
 import PlayerStats from './PlayerStats';
 import LevelHeader from './LevelHeader';
@@ -10,156 +18,117 @@ import DecisionBox from './DecisionBox';
 import FeedbackPanel from './FeedbackPanel';
 import BudgetModal from './BudgetModal';
 
-import { applyEffect, getDecision, isGameOver } from '../logic/gameLogic';
-
 interface LevelScreenProps {
   level: Level;
   playerState: PlayerState;
-  setPlayerState: React.Dispatch<React.SetStateAction<PlayerState>>;
-  onExit: () => void;
+
+  onComplete: (
+    result: LevelResult,
+    state: PlayerState,
+    finalChoice: Choice,
+  ) => void;
 }
 
 const LevelScreen: React.FC<LevelScreenProps> = ({
   level,
   playerState,
-  setPlayerState,
-  onExit,
+  onComplete,
 }) => {
   const [showFeedback, setShowFeedback] = useState(false);
-
   const [showBudget, setShowBudget] = useState(false);
 
-  const [currentState, setCurrentState] = useState<PlayerState>(playerState);
+  const [decisionIndex, setDecisionIndex] = useState(0);
+  const [currentDecisionId, setCurrentDecisionId] = useState<
+    string | undefined
+  >(undefined);
 
-  // Start at first decision
-  const [currentDecisionId, setCurrentDecisionId] = useState(
-    level.decisions[0].id,
-  );
+  /* ---------------- CURRENT DECISION ---------------- */
+  const currentDecision: Decision = currentDecisionId
+    ? level.decisions.find((d) => d.id === currentDecisionId)!
+    : level.decisions[decisionIndex];
 
-  // Get active decision
-  const currentDecision: Decision | undefined = getDecision(
-    level.id,
-    currentDecisionId,
-  );
-
-  // Handle choice confirmation
+  /* ---------------- HANDLE CHOICE ---------------- */
   const confirmChoice = (choice: Choice) => {
-    const updatedState = applyEffect(currentState, choice);
-
-    // Update local level state
-    setCurrentState(updatedState);
-
-    // Update GLOBAL app state
-    setPlayerState(updatedState);
-
-    // GAME OVER
-    if (isGameOver(updatedState)) {
-      return;
-    }
-
-    // BRANCHING
+    // BRANCH FLOW
     if (choice.nextDecisionId) {
       setCurrentDecisionId(choice.nextDecisionId);
       return;
     }
 
-    // FIND CURRENT DECISION INDEX
-    const currentIndex = level.decisions.findIndex(
-      (decision) => decision.id === currentDecisionId,
-    );
-
-    // MOVE TO NEXT DECISION
-    const nextDecision = level.decisions[currentIndex + 1];
-
-    if (nextDecision) {
-      setCurrentDecisionId(nextDecision.id);
-    } else {
-      // LEVEL COMPLETE
-      setShowFeedback(true);
+    // SEQUENTIAL FLOW
+    if (decisionIndex < level.decisions.length - 1) {
+      setDecisionIndex((prev) => prev + 1);
+      setCurrentDecisionId(undefined);
+      return;
     }
+
+    // LEVEL COMPLETE
+    const result: LevelResult = {
+      moneyChange: choice.effect.money ?? 0,
+      savingsChange: choice.effect.savings ?? 0,
+      success: playerState.money > 0,
+    };
+
+    setShowFeedback(true);
+
+    onComplete(result, playerState, choice);
   };
 
-  if (!currentDecision) {
-    return (
-      <div className='h-screen flex items-center justify-center bg-slate-900 text-white'>
-        Decision not found.
-      </div>
-    );
-  }
-
   return (
-    <div className='relative h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white flex flex-col'>
-      {/* TOP BAR */}
-      <div className='absolute top-0 left-0 right-0 z-20 px-6 py-5 flex justify-between items-start'>
-        {/* LEFT */}
+    <div className='relative h-screen w-full overflow-y-auto bg-gray-100 text-white flex flex-col'>
+      {/* ---------------- TOP BAR ---------------- */}
+      <div className='absolute top-0 left-0 right-0 z-20 px-6 py-5 flex items-start justify-between'>
+        {/* LEFT: PLAYER STATS + BUDGET */}
         <div className='flex items-center gap-4'>
           <PlayerStats
-            money={currentState.money}
-            savings={currentState.savings}
+            money={playerState.money}
+            savings={playerState.savings}
           />
 
-          {/* Budget Button */}
           <button
             onClick={() => setShowBudget(true)}
-            className='bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl px-4 py-3 flex flex-col items-center transition shadow-lg'
+            className='bg-white transition rounded-2xl px-4 py-3 flex flex-col items-center shadow-lg cursor-pointer hover:bg-gray-100'
           >
-            <span className='material-icons text-orange-400'>receipt_long</span>
-
-            <span className='text-xs text-gray-300 mt-1'>Budget</span>
+            <ReceiptText size={22} className='text-orange-400' />
+            <span className='text-xs mt-1 text-gray-600'>Budget</span>
           </button>
         </div>
 
-        {/* CENTER */}
+        {/* CENTER: LEVEL HEADER (RESTORED) */}
         <div className='absolute left-1/2 -translate-x-1/2'>
           <LevelHeader levelNumber={level.id} title={level.title} />
         </div>
 
-        {/* RIGHT */}
-        <button className='w-12 h-12 rounded-2xl bg-yellow-400 hover:bg-yellow-300 transition flex items-center justify-center shadow-lg'>
-          <span className='font-bold text-black text-lg'>?</span>
+        {/* RIGHT: HELP */}
+        <button className='w-12 h-12 rounded-2xl bg-yellow-400 hover:bg-yellow-300 transition flex items-center justify-center shadow-lg cursor-pointer'>
+          <HelpCircle size={22} className='text-black' />
         </button>
       </div>
 
-      {/* GAMEPLAY AREA */}
-      <div className='flex-1 px-8 pt-28 pb-[300px]'>
-        <div className='w-full h-full rounded-[32px] border border-white/10 bg-white/[0.03] backdrop-blur-sm shadow-2xl flex items-center justify-center'>
-          <div className='text-center max-w-lg px-6'>
-            <h2 className='text-4xl font-bold mb-4'>Gameplay Area</h2>
-
-            <p className='text-gray-400 leading-relaxed'>
-              Character scenes, room visuals, story illustrations, or future
-              animations can appear here.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* DECISION PANEL */}
-      <div className='absolute bottom-0 left-0 right-0 h-[280px] bg-slate-900/95 border-t border-white/10 backdrop-blur-xl px-8 py-6'>
+      {/* ---------------- DECISION PANEL ---------------- */}
+      <div className='fixed bottom-0 left-0 right-0 min-h-[260px] bg-[#111827]/95 border-t border-white/10 backdrop-blur-xl px-8 py-6 flex gap-6 z-30'>
         <DecisionBox decision={currentDecision} onConfirm={confirmChoice} />
       </div>
 
-      {/* BUDGET MODAL */}
+      {/* ---------------- BUDGET MODAL ---------------- */}
       {showBudget && (
         <BudgetModal
-          budget={currentState.budget}
+          budget={playerState.budget}
           onClose={() => setShowBudget(false)}
         />
       )}
 
-      {/* FEEDBACK */}
+      {/* ---------------- FEEDBACK PANEL ---------------- */}
       {showFeedback && (
         <FeedbackPanel
           result={{
-            moneyChange: currentState.money - playerState.money,
-
-            savingsChange: currentState.savings - playerState.savings,
-
-            success: currentState.money > 0,
+            moneyChange: 0,
+            savingsChange: 0,
+            success: true,
           }}
-          playerState={currentState}
-          onHome={onExit}
-          onNext={onExit}
+          playerState={playerState}
+          onHome={() => {}}
+          onNext={() => {}}
         />
       )}
     </div>

@@ -1,3 +1,5 @@
+// SplashScreen.tsx
+
 import React, { useState, useEffect } from 'react';
 import { loadGame, saveGame } from '../logic/gameLogic';
 import type { PlayerState } from '../types/gameTypes';
@@ -22,9 +24,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onStart }) => {
           setLoading(false);
           return 100;
         }
-        return prev + 2;
+        return Math.min(prev + 1, 100);
       });
-    }, 30);
+    }, 60);
     return () => clearInterval(interval);
   }, []);
 
@@ -72,7 +74,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onStart }) => {
         <div className='mt-16 animate-fadeUp'>
           <button
             onClick={handleStart}
-            className='
+            className=' cursor-pointer
             px-8 py-4
             bg-orange-500
             hover:bg-orange-600

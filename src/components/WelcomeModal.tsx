@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import { X } from 'lucide-react';
+
 interface WelcomeModalProps {
   onClose: () => void;
 }
@@ -19,9 +21,9 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ onClose }) => {
         {/* CLOSE */}
         <button
           onClick={onClose}
-          className='absolute top-4 right-4 text-gray-400 hover:text-white transition'
+          className='cursor-pointer absolute top-4 right-4 text-gray-400 hover:text-white transition'
         >
-          <span className='material-icons'>close</span>
+          <X size={22} className='text-black' />
         </button>
 
         {/* TITLE */}
@@ -49,7 +51,7 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ onClose }) => {
         {/* BUTTON */}
         <button
           onClick={onClose}
-          className='w-full mt-8 py-4 bg-orange-500 hover:bg-orange-600 transition rounded-2xl font-semibold shadow-lg'
+          className='cursor-pointer w-full mt-8 py-4 bg-orange-500 hover:bg-orange-600 transition rounded-2xl font-semibold shadow-lg'
         >
           Yes, Let’s Start
         </button>

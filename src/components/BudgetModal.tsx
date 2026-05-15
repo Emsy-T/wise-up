@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { PlayerState } from '../types/gameTypes';
+import { X } from 'lucide-react';
 
 interface BudgetModalProps {
   budget?: PlayerState['budget']; // Budget object from player state
@@ -20,10 +21,10 @@ const BudgetModal: React.FC<BudgetModalProps> = ({ budget, onClose }) => {
         {/* Close button (top-right corner) */}
         <button
           onClick={onClose}
-          className='absolute top-3 right-3 text-gray-500 hover:text-gray-700'
+          className='cursor-pointer absolute top-3 right-3 text-gray-500 hover:text-gray-700'
           aria-label='Close Budget Modal'
         >
-          <span className='material-icons'>close</span>
+          <X size={22} className='text-black' />
         </button>
 
         {/* Modal Title */}

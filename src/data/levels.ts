@@ -19,17 +19,17 @@ export const levels: Level[] = [
           {
             id: 'essentials',
             text: '₦30,000 - bare minimum (rice, beans, bread, eggs, milk, etc)',
-            effect: { budget: { food: 30000 } },
+            effect: { budget: { food: +30000 } },
           },
           {
             id: 'balanced',
             text: '₦50,000 - essentials + meat + fruits + vegetables',
-            effect: { budget: { food: 50000 } },
+            effect: { budget: { food: +50000 } },
           },
           {
             id: 'premium',
             text: '₦80,000 - balanced + snacks + soft drinks + eating out occasionally',
-            effect: { budget: { food: 80000 } },
+            effect: { budget: { food: +80000 } },
           },
         ],
       },
@@ -42,17 +42,17 @@ export const levels: Level[] = [
           {
             id: 'bus',
             text: 'Public transport (₦10,000)',
-            effect: { budget: { transport: 10000 } },
+            effect: { budget: { transport: +10000 } },
           },
           {
             id: 'taxi',
             text: 'Occasional taxi rides (₦20,000)',
-            effect: { budget: { transport: 20000 } },
+            effect: { budget: { transport: +20000 } },
           },
           {
             id: 'ride-hailing',
             text: 'Bolt for most trips (₦50,000)',
-            effect: { budget: { transport: 50000 } },
+            effect: { budget: { transport: +50000 } },
           },
         ],
       },
@@ -311,7 +311,7 @@ export const levels: Level[] = [
           {
             id: 'movie-night',
             text: 'Renew your Netflix subscription and watch a movie (₦4,000)',
-            effect: { money: 4000 },
+            effect: { money: -4000 },
           },
         ],
       },
@@ -323,12 +323,12 @@ export const levels: Level[] = [
           {
             id: 'picnic',
             text: 'Have a picnic (₦5,000)',
-            effect: { money: 5000 },
+            effect: { money: -5000 },
           },
           {
             id: 'games',
             text: 'Go on some rides and play games (₦7,000)',
-            effect: { money: 7000 },
+            effect: { money: -7000 },
           },
         ],
       },
@@ -340,17 +340,17 @@ export const levels: Level[] = [
           {
             id: 'house-party',
             text: 'Attend a house party (₦10,000)',
-            effect: { money: 10000 },
+            effect: { money: -10000 },
           },
           {
             id: 'comedy-show',
             text: 'Attend a show featuring one of your favorite comedians (₦20,000)',
-            effect: { money: 20000 },
+            effect: { money: -20000 },
           },
           {
             id: 'vip-party',
             text: 'Attend an exclusive party (₦50,000)',
-            effect: { money: 50000 },
+            effect: { money: -50000 },
           },
         ],
       },

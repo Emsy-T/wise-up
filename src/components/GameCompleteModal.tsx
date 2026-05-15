@@ -36,7 +36,7 @@ const GameCompleteModal: React.FC<GameCompleteModalProps> = ({
 
         <button
           onClick={handleReplay}
-          className='w-full py-4 rounded-2xl bg-orange-500 hover:bg-orange-600 transition font-semibold'
+          className='cursor-pointer w-full py-4 rounded-2xl bg-orange-500 hover:bg-orange-600 transition font-semibold'
         >
           Replay Game
         </button>

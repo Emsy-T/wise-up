@@ -1,5 +1,9 @@
+// GameMap.tsx
+
 import React, { useState } from 'react';
 import type { PlayerState, Level } from '../types/gameTypes';
+
+import { ReceiptText } from 'lucide-react';
 
 import PlayerStats from './PlayerStats';
 import BudgetModal from './BudgetModal';
@@ -21,20 +25,27 @@ const GameMap: React.FC<GameMapProps> = ({
 }) => {
   const [showBudget, setShowBudget] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
-  const [showWelcome, setShowWelcome] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(gameStarted);
+
+  console.log(state.currentLevel);
 
   return (
-    <div className='relative h-screen w-full bg-gradient-to-b from-green-200 to-blue-200 flex flex-col'>
+    <div className='relative h-screen w-full overflow-y-auto bg-gray-100 flex flex-col '>
       {/* --- TOP UI --- */}
       <div className='absolute top-4 left-4 flex items-center space-x-4 z-10'>
         <PlayerStats money={state.money} savings={state.savings} />
 
         <button
-          onClick={() => setShowBudget(true)}
-          className='p-2 bg-white rounded-full shadow hover:bg-gray-200 transition'
-          aria-label='Open Budget'
+          onClick={() => {
+            console.log('BUDGET MODAL OPENED');
+            console.log('Current Budget:', state.budget);
+            setShowBudget(true);
+          }}
+          className='bg-white transition rounded-2xl px-4 py-3 flex flex-col items-center shadow-lg cursor-pointer'
         >
-          <span className='material-icons text-orange-500'>receipt_long</span>
+          <ReceiptText size={22} className='text-orange-400' />
+
+          <span className='text-xs mt-1 text-gray-600'>Budget</span>
         </button>
       </div>
 
@@ -53,23 +64,25 @@ const GameMap: React.FC<GameMapProps> = ({
                 } relative`}
               >
                 <button
-                  disabled={!isUnlocked}
+                  disabled={!isUnlocked || isCompleted}
                   onClick={() => setSelectedLevel(level)}
-                  className={`
-                    w-16 h-16 rounded-full flex items-center justify-center shadow-md transition
-                    ${
-                      isCompleted
-                        ? 'bg-green-500 text-white'
-                        : isUnlocked
-                          ? 'bg-orange-500 text-white'
-                          : 'bg-gray-300 text-gray-500'
-                    }
-                  `}
+                  className={`cursor-pointer
+    w-16 h-16 rounded-full flex items-center justify-center shadow-md transition
+    ${
+      isCompleted
+        ? 'bg-green-500 text-white cursor-not-allowed opacity-70'
+        : isUnlocked
+          ? 'bg-orange-500 hover:bg-orange-600 text-white'
+          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+    }
+  `}
                 >
-                  {isUnlocked ? (
+                  {isCompleted ? (
+                    '✓'
+                  ) : isUnlocked ? (
                     level.id
                   ) : (
-                    <span className='material-icons'>lock</span>
+                    <span className='material-icons text-sm'>locked</span>
                   )}
                 </button>
               </div>
@@ -87,7 +100,7 @@ const GameMap: React.FC<GameMapProps> = ({
       )}
 
       {/* --- WELCOME MODAL --- */}
-      {showWelcome && gameStarted && (
+      {showWelcome && (
         <div className='absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50'>
           <div className='bg-white rounded-2xl shadow-xl p-8 max-w-md text-center animate-fadeIn'>
             <h2 className='text-2xl font-bold mb-4 text-gray-800'>
@@ -104,8 +117,11 @@ const GameMap: React.FC<GameMapProps> = ({
             </p>
 
             <button
-              onClick={() => setShowWelcome(false)}
-              className='px-6 py-3 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition'
+              onClick={() => {
+                localStorage.setItem('wiseup-welcome-seen', 'true');
+                setShowWelcome(false);
+              }}
+              className='cursor-pointer px-6 py-3 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition'
             >
               Yes, Let’s Start
             </button>
@@ -124,6 +140,13 @@ const GameMap: React.FC<GameMapProps> = ({
           }}
         />
       )}
+
+      {/* DISCLAIMER */}
+      <div className='w-full text-center text-xs bg-amber-100 text-gray-500 py-4 px-6'>
+        Disclaimer: Prices and financial situations in WiseUp are fictional
+        simulations created for educational gameplay purposes and may not
+        accurately reflect real-world market prices.
+      </div>
     </div>
   );
 };

@@ -3,6 +3,8 @@
 import React from 'react';
 import type { Level } from '../types/gameTypes';
 
+import { X } from 'lucide-react';
+
 interface LevelIntroModalProps {
   level: Level; // The level object with id, title, description
   onClose: () => void; // Callback to close the modal
@@ -25,10 +27,10 @@ const LevelIntroModal: React.FC<LevelIntroModalProps> = ({
         {/* Close button (top-right corner) */}
         <button
           onClick={onClose}
-          className='absolute top-3 right-3 text-gray-500 hover:text-gray-700'
+          className='cursor-pointer absolute top-3 right-3 text-gray-500 hover:text-gray-700'
           aria-label='Close Level Intro Modal'
         >
-          <span className='material-icons'>close</span>
+          <X size={22} className='text-black' />
         </button>
 
         {/* Level Info */}
@@ -42,7 +44,7 @@ const LevelIntroModal: React.FC<LevelIntroModalProps> = ({
         {/* "Let's Go" button */}
         <button
           onClick={onStart}
-          className='w-full py-3 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition'
+          className='cursor-pointer w-full py-3 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition'
         >
           Let’s Go
         </button>

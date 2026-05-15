@@ -40,7 +40,7 @@ const DecisionBox: React.FC<DecisionBoxProps> = ({ decision, onConfirm }) => {
           <button
             onClick={() => selectedChoice && onConfirm(selectedChoice)}
             disabled={!selectedChoice}
-            className='w-20 h-20 rounded-2xl bg-green-500 hover:bg-green-600 disabled:bg-gray-500 disabled:opacity-50 text-white text-4xl font-bold transition shadow-lg'
+            className='cursor-pointer w-20 h-20 rounded-2xl bg-green-500 hover:bg-green-600 disabled:bg-gray-500 disabled:opacity-50 text-white text-4xl font-bold transition shadow-lg'
           >
             ✓
           </button>

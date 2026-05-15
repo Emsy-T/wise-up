@@ -33,7 +33,7 @@ const GameOverModal: React.FC<GameOverProps> = ({ onRestart }) => {
         {/* Restart Game Button */}
         <button
           onClick={handleRestart}
-          className='w-full mt-6 py-3 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition'
+          className='cursor-pointer w-full mt-6 py-3 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600 transition'
         >
           Restart Game
         </button>

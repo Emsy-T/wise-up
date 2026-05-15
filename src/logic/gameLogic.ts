@@ -2,29 +2,33 @@
 
 import type { PlayerState, Choice, Level } from '../types/gameTypes';
 import { levels } from '../data/levels';
+
 const totalLevels = 10;
 
-// CREATE A FUNCTION TO APPLY THE EFFECT OF THE PLAYER'S CHOICE ON THEIR STATE
+/* ---------------- APPLY EFFECT ---------------- */
 export function applyEffect(state: PlayerState, choice: Choice): PlayerState {
   const effect = choice.effect;
-  return {
+
+  const newState: PlayerState = {
     ...state,
 
-    // Update money available
     money: state.money + (effect.money ?? 0),
-
-    // Update savings
     savings: state.savings + (effect.savings ?? 0),
 
-    // Update budget
     budget: {
-      ...state.budget,
-      ...effect.budget,
+      food: state.budget?.food ?? 0,
+      transport: state.budget?.transport ?? 0,
+      social: state.budget?.social ?? 0,
+      toiletries: state.budget?.toiletries ?? 0,
+
+      ...(effect.budget ?? {}),
     },
   };
+
+  return newState;
 }
 
-// GET CURRENT LEVEL & DECISION
+/* ---------------- LEVEL HELPERS ---------------- */
 export function getLevel(levelId: number): Level | undefined {
   return levels.find((l) => l.id === levelId);
 }
@@ -34,86 +38,47 @@ export function getDecision(levelId: number, decisionId: string) {
   return level?.decisions.find((d) => d.id === decisionId);
 }
 
-// HANDLE LINKED PLAYER CHOICES & DECISIONS
-export function makeChoice(
-  state: PlayerState,
-  levelId: number,
-  decisionId: string,
-  choiceId: string,
-): PlayerState {
-  const decision = getDecision(levelId, decisionId);
-  if (!decision) return state;
-
-  const choice = decision.choices.find((c) => c.id === choiceId);
-  if (!choice) return state;
-
-  // Apply effect
-  const newState = applyEffect(state, choice);
-
-  // If choice links to another decision, jump there
-  if (choice.nextDecisionId) {
-    return {
-      ...newState,
-      currentDecisionId: choice.nextDecisionId,
-    };
-  }
-
-  // Otherwise, move to next decision in sequence
-  return nextDecision(newState);
-}
-
-// DECISION NAVIGATION
+/* ---------------- NAVIGATION ---------------- */
 export function nextDecision(state: PlayerState): PlayerState {
   return {
     ...state,
     decisionIndex: state.decisionIndex + 1,
-    currentDecisionId: undefined, // reset if moving sequentially
+    currentDecisionId: undefined,
   };
 }
 
-// LEVEL NAVIGATION
 export function nextLevel(state: PlayerState): PlayerState {
-  const nextLevel = state.currentLevel + 1;
-  const updatedState = paySalary(nextLevel, state);
+  const next = state.currentLevel + 1;
+
+  const updated = paySalary(next, state);
 
   return {
-    ...updatedState,
-    currentLevel: nextLevel,
+    ...updated,
+    currentLevel: next,
     decisionIndex: 0,
-    currentDecisionId: undefined, // reset decision flow
+    currentDecisionId: undefined,
   };
 }
 
-// CREATE A FUNCTION THAT CHECKS WHETHER THE GAME IS OVER
-// isGameOver is true if money is less than or equal to 0
+/* ---------------- GAME RULES ---------------- */
 export function isGameOver(state: PlayerState): boolean {
   return state.money <= 0;
 }
 
-// NOTE: To plan for scalability, instead of directly checking that the player is on Level 10, use a constant that holds the total number of levels and compare the player's current level with the total levels
-
-// Create functions that determine whether the player wins or survives the game.
 export function evaluateGame(
   state: PlayerState,
 ): 'win' | 'survived' | 'ongoing' {
-  const totalMoney = state.money;
-
-  if (state.currentLevel >= totalLevels && totalMoney >= 10000) {
+  if (state.currentLevel >= totalLevels && state.money >= 10000) {
     return 'win';
   }
 
-  if (
-    state.currentLevel >= totalLevels &&
-    totalMoney > 0 &&
-    totalMoney < 10000
-  ) {
+  if (state.currentLevel >= totalLevels && state.money > 0) {
     return 'survived';
   }
 
   return 'ongoing';
 }
 
-// CREATE A FUNCTION THAT PAYS THE PLAYER THEIR SALARY EVERY FIVE LEVELS
 export function paySalary(
   currentLevel: number,
   state: PlayerState,
@@ -127,16 +92,26 @@ export function paySalary(
   return state;
 }
 
-// SAVE GAME STATE TO BROWSER LOCAL STORAGE
+/* ---------------- LOCAL STORAGE ---------------- */
+const STORAGE_KEY = 'wiseup-game-state';
+
 export function saveGame(state: PlayerState): void {
-  localStorage.setItem('wiseup-game-state', JSON.stringify(state));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.error('SAVE FAILED:', e);
+  }
 }
 
-// LOAD GAME FROM BROWSER STORAGE TO RESTORE PLAYER PROGRESS
 export function loadGame(): PlayerState {
-  const saved = localStorage.getItem('wiseup-game-state');
+  const saved = localStorage.getItem(STORAGE_KEY);
+
   if (saved) {
-    return JSON.parse(saved);
+    try {
+      return JSON.parse(saved);
+    } catch (e) {
+      console.error('LOAD FAILED:', e);
+    }
   }
 
   return {
@@ -145,6 +120,11 @@ export function loadGame(): PlayerState {
     currentLevel: 1,
     decisionIndex: 0,
     currentDecisionId: undefined,
-    budget: {},
+    budget: {
+      food: 0,
+      transport: 0,
+      social: 0,
+      toiletries: 0,
+    },
   };
 }
