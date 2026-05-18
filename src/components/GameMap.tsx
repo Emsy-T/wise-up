@@ -17,34 +17,21 @@ interface GameMapProps {
   gameStarted: boolean;
 }
 
-const GameMap: React.FC<GameMapProps> = ({
-  state,
-  levels,
-  onEnterLevel,
-  gameStarted,
-}) => {
+const GameMap: React.FC<GameMapProps> = ({ state, levels, onEnterLevel }) => {
   const [showBudget, setShowBudget] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
-  const [showWelcome, setShowWelcome] = useState(gameStarted);
-
-  console.log(state.currentLevel);
 
   return (
-    <div className='relative h-screen w-full overflow-y-auto bg-gray-100 flex flex-col '>
+    <div className='relative h-screen w-full overflow-y-auto bg-gray-100 flex flex-col'>
       {/* --- TOP UI --- */}
       <div className='absolute top-4 left-4 flex items-center space-x-4 z-10'>
         <PlayerStats money={state.money} savings={state.savings} />
 
         <button
-          onClick={() => {
-            console.log('BUDGET MODAL OPENED');
-            console.log('Current Budget:', state.budget);
-            setShowBudget(true);
-          }}
+          onClick={() => setShowBudget(true)}
           className='bg-white transition rounded-2xl px-4 py-3 flex flex-col items-center shadow-lg cursor-pointer'
         >
           <ReceiptText size={22} className='text-orange-400' />
-
           <span className='text-xs mt-1 text-gray-600'>Budget</span>
         </button>
       </div>
@@ -59,23 +46,20 @@ const GameMap: React.FC<GameMapProps> = ({
             return (
               <div
                 key={level.id}
-                className={`flex ${
-                  index % 2 === 0 ? 'justify-start' : 'justify-end'
-                } relative`}
+                className={`flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'} relative`}
               >
                 <button
                   disabled={!isUnlocked || isCompleted}
                   onClick={() => setSelectedLevel(level)}
                   className={`cursor-pointer
-    w-16 h-16 rounded-full flex items-center justify-center shadow-md transition
-    ${
-      isCompleted
-        ? 'bg-green-500 text-white cursor-not-allowed opacity-70'
-        : isUnlocked
-          ? 'bg-orange-500 hover:bg-orange-600 text-white'
-          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-    }
-  `}
+                    w-16 h-16 rounded-full flex items-center justify-center shadow-md transition
+                    ${
+                      isCompleted
+                        ? 'bg-green-500 text-white cursor-not-allowed opacity-70'
+                        : isUnlocked
+                          ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
                 >
                   {isCompleted ? (
                     '✓'
@@ -97,36 +81,6 @@ const GameMap: React.FC<GameMapProps> = ({
           onClose={() => setShowBudget(false)}
           budget={state.budget}
         />
-      )}
-
-      {/* --- WELCOME MODAL --- */}
-      {showWelcome && (
-        <div className='absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50'>
-          <div className='bg-white rounded-2xl shadow-xl p-8 max-w-md text-center animate-fadeIn'>
-            <h2 className='text-2xl font-bold mb-4 text-gray-800'>
-              Welcome to WiseUp
-            </h2>
-
-            <p className='text-gray-600 mb-6 leading-relaxed'>
-              You are about to step into a journey where every choice shapes
-              your financial story. Start with what you have, make smart
-              decisions, and see how your savings and spending grow.
-              <br />
-              <br />
-              Are you ready to play?
-            </p>
-
-            <button
-              onClick={() => {
-                localStorage.setItem('wiseup-welcome-seen', 'true');
-                setShowWelcome(false);
-              }}
-              className='cursor-pointer px-6 py-3 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition'
-            >
-              Yes, Let’s Start
-            </button>
-          </div>
-        </div>
       )}
 
       {/* --- LEVEL INTRO MODAL --- */}

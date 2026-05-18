@@ -1,7 +1,6 @@
 // WelcomeModal.tsx
 
 import React from 'react';
-
 import { X } from 'lucide-react';
 
 interface WelcomeModalProps {
@@ -37,14 +36,11 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ onClose }) => {
             You’re about to step into a journey where every choice shapes your
             financial story.
           </p>
-
           <p>
             Spend wisely, build savings, manage your budget, and navigate
             real-life financial challenges.
           </p>
-
           <p>Every decision matters.</p>
-
           <p className='text-white font-medium pt-2'>Are you ready to play?</p>
         </div>
 

@@ -11,17 +11,14 @@ export function applyEffect(state: PlayerState, choice: Choice): PlayerState {
 
   const newState: PlayerState = {
     ...state,
-
     money: state.money + (effect.money ?? 0),
     savings: state.savings + (effect.savings ?? 0),
-
     budget: {
       food: state.budget?.food ?? 0,
       transport: state.budget?.transport ?? 0,
       social: state.budget?.social ?? 0,
       toiletries: state.budget?.toiletries ?? 0,
-
-      ...(effect.budget ?? {}),
+      ...(effect.budget ?? {}), // merge new budget values
     },
   };
 
@@ -49,7 +46,6 @@ export function nextDecision(state: PlayerState): PlayerState {
 
 export function nextLevel(state: PlayerState): PlayerState {
   const next = state.currentLevel + 1;
-
   const updated = paySalary(next, state);
 
   return {
@@ -71,11 +67,9 @@ export function evaluateGame(
   if (state.currentLevel >= totalLevels && state.money >= 10000) {
     return 'win';
   }
-
   if (state.currentLevel >= totalLevels && state.money > 0) {
     return 'survived';
   }
-
   return 'ongoing';
 }
 
@@ -84,11 +78,9 @@ export function paySalary(
   state: PlayerState,
 ): PlayerState {
   const salary = 300000;
-
   if (currentLevel % 5 === 1) {
     return { ...state, money: state.money + salary };
   }
-
   return state;
 }
 
@@ -105,7 +97,6 @@ export function saveGame(state: PlayerState): void {
 
 export function loadGame(): PlayerState {
   const saved = localStorage.getItem(STORAGE_KEY);
-
   if (saved) {
     try {
       return JSON.parse(saved);
@@ -113,7 +104,7 @@ export function loadGame(): PlayerState {
       console.error('LOAD FAILED:', e);
     }
   }
-
+  // Default state
   return {
     money: 100000,
     savings: 0,
