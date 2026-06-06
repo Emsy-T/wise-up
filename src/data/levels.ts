@@ -545,11 +545,13 @@ export const levels: Level[] = [
             id: 'yes-repair',
             text: 'Yes',
             effect: {},
+            nextDecisionId: 'savings',
           },
           {
             id: 'no-repair',
             text: 'No',
             effect: {},
+            nextDecisionId: 'savings',
           },
         ],
       },
