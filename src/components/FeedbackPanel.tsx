@@ -23,19 +23,23 @@ const FeedbackPanel: React.FC<FeedbackPanelProps> = ({
   return (
     <div className='fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4'>
       <div
-        className='w-full max-w-lg rounded-3xl bg-[#111827] border border-white/10 shadow-2xl p-8 text-white animate-fadeInScale'
+        className='w-full max-w-sm sm:max-w-lg rounded-2xl sm:rounded-3xl bg-[#111827] border border-white/10 shadow-2xl p-6 sm:p-8 text-white animate-fadeInScale'
         onClick={(e) => e.stopPropagation()}
       >
         {/* Title */}
         <div className='mb-6'>
-          <h2 className='text-3xl font-bold text-orange-400'>Level Complete</h2>
+          <h2 className='text-2xl sm:text-3xl font-bold text-orange-400'>
+            Level Complete
+          </h2>
 
-          <p className='text-gray-400 mt-2'>Here's how you performed.</p>
+          <p className='text-gray-400 mt-2 text-sm sm:text-base'>
+            Here's how you performed.
+          </p>
         </div>
 
         {/* Stats */}
-        <div className='space-y-4 mb-8'>
-          <div className='flex justify-between items-center bg-white/5 rounded-2xl p-4'>
+        <div className='space-y-3 sm:space-y-4 mb-8'>
+          <div className='flex justify-between items-center bg-white/5 rounded-lg sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base'>
             <span className='text-gray-300'>Money Change</span>
 
             <span
@@ -47,7 +51,7 @@ const FeedbackPanel: React.FC<FeedbackPanelProps> = ({
             </span>
           </div>
 
-          <div className='flex justify-between items-center bg-white/5 rounded-2xl p-4'>
+          <div className='flex justify-between items-center bg-white/5 rounded-lg sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base'>
             <span className='text-gray-300'>Savings Change</span>
 
             <span
@@ -59,7 +63,7 @@ const FeedbackPanel: React.FC<FeedbackPanelProps> = ({
             </span>
           </div>
 
-          <div className='flex justify-between items-center bg-white/5 rounded-2xl p-4'>
+          <div className='flex justify-between items-center bg-white/5 rounded-lg sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base'>
             <span className='text-gray-300'>Current Balance</span>
 
             <span className='font-bold text-orange-300'>
@@ -69,22 +73,24 @@ const FeedbackPanel: React.FC<FeedbackPanelProps> = ({
         </div>
 
         {/* Message */}
-        <div className='bg-white/5 rounded-2xl p-4 mb-8'>
-          <p className='text-gray-300 leading-relaxed'>{feedbackMessage}</p>
+        <div className='bg-white/5 rounded-lg sm:rounded-2xl p-3 sm:p-4 mb-8'>
+          <p className='text-gray-300 leading-relaxed text-sm sm:text-base'>
+            {feedbackMessage}
+          </p>
         </div>
 
         {/* Buttons */}
-        <div className='flex gap-4'>
+        <div className='flex gap-3 sm:gap-4'>
           <button
             onClick={onHome}
-            className='flex-1 py-3 rounded-2xl bg-white/10 hover:bg-white/20 transition'
+            className='flex-1 py-2 sm:py-3 rounded-lg sm:rounded-2xl bg-white/10 hover:bg-white/20 transition text-sm sm:text-base'
           >
             Home
           </button>
 
           <button
             onClick={onNext}
-            className='flex-1 py-3 rounded-2xl bg-orange-500 hover:bg-orange-600 transition font-semibold'
+            className='flex-1 py-2 sm:py-3 rounded-lg sm:rounded-2xl bg-orange-500 hover:bg-orange-600 transition font-semibold text-sm sm:text-base'
           >
             Next Level
           </button>

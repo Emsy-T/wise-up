@@ -50,7 +50,7 @@ const App: React.FC = () => {
   };
 
   const handleCompleteLevel = (
-    result: LevelResult,
+    _result: LevelResult,
     stateFromLevel: PlayerState,
     finalChoice: Choice,
   ) => {

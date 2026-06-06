@@ -18,7 +18,7 @@ const ChoiceButton: React.FC<ChoiceButtonProps> = ({
     <button
       onClick={() => onSelect(choice)}
       className={`cursor-pointer
-        w-full p-5 rounded-2xl border text-left transition-all duration-200
+        w-full p-3 sm:p-5 rounded-lg sm:rounded-2xl border text-left transition-all duration-200 text-sm sm:text-base
 
         ${
           isSelected
