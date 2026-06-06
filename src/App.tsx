@@ -18,7 +18,6 @@ import {
   nextLevel,
   applyEffect,
   isGameOver,
-  evaluateGame,
 } from './logic/gameLogic';
 import { levels } from './data/levels';
 
